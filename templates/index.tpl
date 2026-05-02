@@ -18,7 +18,7 @@
 			<li><a href="#config-tab">{translate key="plugins.importexport.OMPBookDepositCrossref.configTab"}</a></li>
 		</ul>
 
-		{{-- Tab 1: Exportar XML --}}
+		{* Tab 1: Exportar XML *}
 		<div id="exportSubmissions-tab">
 			<form id="exportXmlForm" class="pkp_form" action="{plugin_url path="exportSubmissionsBounce"}" method="post">
 				{csrf}
@@ -59,7 +59,7 @@
 			</form>
 		</div>
 
-		{{-- Tab 2: Depositar en Crossref --}}
+		{* Tab 2: Depositar en Crossref *}
 		<div id="depositSubmissions-tab">
 			<form id="depositCrossrefForm" class="pkp_form" action="{plugin_url path="depositSubmissionsBounce"}" method="post">
 				{csrf}
@@ -120,7 +120,7 @@
 			</form>
 		</div>
 
-		{{-- Tab 3: Configuración --}}
+		{* Tab 3: Configuración *}
 		<div id="config-tab">
 			{if $settingsSaved}
 				<div class="pkp_controllers_notification" style="margin-bottom: 16px;">
