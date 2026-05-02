@@ -21,6 +21,9 @@ msgstr "Exportar XML"
 msgid "plugins.importexport.OMPBookDepositCrossref.exportButton"
 msgstr "Exportar XML Crossref"
 
+msgid "plugins.importexport.OMPBookDepositCrossref.depositTab"
+msgstr "Depositar en Crossref"
+
 msgid "plugins.importexport.OMPBookDepositCrossref.depositConfigTitle"
 msgstr "Deposito directo a Crossref"
 
