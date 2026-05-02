@@ -91,6 +91,15 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
                 
                 $this->exportSubmissions($selectedSubmissions, $context, $request);
                 break;
+
+            case 'depositSubmissionsBounce':
+                $selectedSubmissions = (array) $request->getUserVar('selectedSubmissions');
+                if (empty($selectedSubmissions)) {
+                    $request->redirect(null, null, null, ['plugin', $this->getName()]);
+                }
+
+                $this->depositSubmissions($selectedSubmissions, $context, $request);
+                break;
                 
             default:
                 $dispatcher = $request->getDispatcher();
@@ -104,9 +113,18 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
      */
     protected function exportSubmissions($submissionIds, $context, $request)
     {
+        $xml = $this->buildCrossrefBatchXml($submissionIds, $context, $request);
+        $this->outputXmlDownload($xml);
+    }
+
+    /**
+     * Build Crossref XML body for selected submissions.
+     */
+    protected function buildCrossrefBatchXml($submissionIds, $context, $request)
+    {
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         $xml .= "<doi_batch version=\"5.4.0\" xmlns=\"http://www.crossref.org/schema/5.4.0\" xmlns:jats=\"http://www.ncbi.nlm.nih.gov/JATS1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.crossref.org/schema/5.4.0 https://www.crossref.org/schemas/crossref5.4.0.xsd\">\n";
-        
+
         $xml .= "  <head>\n";
         $timestamp = date('YmdHis') . str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT);
         $xml .= "    <doi_batch_id>omp_" . $timestamp . "</doi_batch_id>\n";
@@ -296,16 +314,163 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
             
             $xml .= "    </book>\n";
         }
-        
+
         $xml .= "  </body>\n";
         $xml .= "</doi_batch>\n";
-        
-        // Output the generated XML for download
+
+        return $xml;
+    }
+
+    /**
+     * Output generated XML as a downloadable file.
+     */
+    protected function outputXmlDownload($xml)
+    {
         header('Content-Type: application/xml');
         header('Content-Disposition: attachment; filename="crossref_books_'.time().'.xml"');
         header('Cache-Control: public');
-        
+
         echo $xml;
+        exit;
+    }
+
+    /**
+     * Deposit selected submissions directly to Crossref.
+     */
+    protected function depositSubmissions($submissionIds, $context, $request)
+    {
+        $environment = trim((string) $request->getUserVar('crossrefEnvironment'));
+        if ($environment !== 'live') {
+            $environment = 'test';
+        }
+
+        $loginId = trim((string) $request->getUserVar('crossrefLoginId'));
+        $loginPasswd = trim((string) $request->getUserVar('crossrefLoginPasswd'));
+
+        if ($loginId === '' || $loginPasswd === '') {
+            $this->renderDepositResult([
+                'ok' => false,
+                'message' => __('plugins.importexport.OMPBookDepositCrossref.depositMissingCredentials'),
+                'environment' => $environment,
+                'endpoint' => '',
+                'httpStatus' => null,
+                'responseBody' => '',
+            ]);
+        }
+
+        $xml = $this->buildCrossrefBatchXml($submissionIds, $context, $request);
+        $result = $this->depositToCrossref($xml, $loginId, $loginPasswd, $environment);
+        $this->renderDepositResult($result);
+    }
+
+    /**
+     * Perform Crossref deposit using servlet endpoint.
+     */
+    protected function depositToCrossref($xml, $loginId, $loginPasswd, $environment = 'test')
+    {
+        $endpoint = ($environment === 'live')
+            ? 'https://doi.crossref.org/servlet/deposit'
+            : 'https://test.crossref.org/servlet/deposit';
+
+        if (!function_exists('curl_init')) {
+            return [
+                'ok' => false,
+                'message' => __('plugins.importexport.OMPBookDepositCrossref.depositCurlUnavailable'),
+                'environment' => $environment,
+                'endpoint' => $endpoint,
+                'httpStatus' => null,
+                'responseBody' => '',
+            ];
+        }
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'crossref_');
+        if ($tempFile === false) {
+            return [
+                'ok' => false,
+                'message' => __('plugins.importexport.OMPBookDepositCrossref.depositTempFileError'),
+                'environment' => $environment,
+                'endpoint' => $endpoint,
+                'httpStatus' => null,
+                'responseBody' => '',
+            ];
+        }
+
+        file_put_contents($tempFile, $xml);
+
+        $postFields = [
+            'operation' => 'doMDUpload',
+            'login_id' => $loginId,
+            'login_passwd' => $loginPasswd,
+            'fname' => new \CURLFile($tempFile, 'application/xml', 'crossref_books_' . time() . '.xml'),
+        ];
+
+        $ch = curl_init($endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 90);
+
+        $responseBody = curl_exec($ch);
+        $curlError = curl_error($ch);
+        $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        @unlink($tempFile);
+
+        if ($responseBody === false) {
+            return [
+                'ok' => false,
+                'message' => __('plugins.importexport.OMPBookDepositCrossref.depositConnectionError') . ' ' . $curlError,
+                'environment' => $environment,
+                'endpoint' => $endpoint,
+                'httpStatus' => $httpStatus ?: null,
+                'responseBody' => '',
+            ];
+        }
+
+        return [
+            'ok' => ($httpStatus >= 200 && $httpStatus < 300),
+            'message' => ($httpStatus >= 200 && $httpStatus < 300)
+                ? __('plugins.importexport.OMPBookDepositCrossref.depositSuccess')
+                : __('plugins.importexport.OMPBookDepositCrossref.depositHttpError'),
+            'environment' => $environment,
+            'endpoint' => $endpoint,
+            'httpStatus' => $httpStatus,
+            'responseBody' => (string) $responseBody,
+        ];
+    }
+
+    /**
+     * Render a simple result page after Crossref deposit.
+     */
+    protected function renderDepositResult($result)
+    {
+        header('Content-Type: text/html; charset=UTF-8');
+
+        $statusLabel = $result['ok']
+            ? __('plugins.importexport.OMPBookDepositCrossref.depositStatusOk')
+            : __('plugins.importexport.OMPBookDepositCrossref.depositStatusError');
+
+        $responseBody = $this->xmlEscape((string) $result['responseBody']);
+        $message = $this->xmlEscape((string) $result['message']);
+        $environment = $this->xmlEscape((string) $result['environment']);
+        $endpoint = $this->xmlEscape((string) $result['endpoint']);
+        $httpStatus = isset($result['httpStatus']) && $result['httpStatus'] !== null
+            ? (string) ((int) $result['httpStatus'])
+            : '-';
+
+        echo '<!doctype html><html><head><meta charset="UTF-8"><title>'
+            . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultTitle'))
+            . '</title></head><body style="font-family: sans-serif; margin: 24px;">';
+        echo '<h2>' . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultTitle')) . '</h2>';
+        echo '<p><strong>' . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultStatus')) . ':</strong> ' . $this->xmlEscape($statusLabel) . '</p>';
+        echo '<p><strong>' . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultMessage')) . ':</strong> ' . $message . '</p>';
+        echo '<p><strong>' . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultEnvironment')) . ':</strong> ' . $environment . '</p>';
+        echo '<p><strong>' . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultEndpoint')) . ':</strong> ' . $endpoint . '</p>';
+        echo '<p><strong>' . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultHttpStatus')) . ':</strong> ' . $this->xmlEscape($httpStatus) . '</p>';
+        echo '<h3>' . $this->xmlEscape(__('plugins.importexport.OMPBookDepositCrossref.depositResultResponse')) . '</h3>';
+        echo '<pre style="padding: 12px; border: 1px solid #ccc; background: #f8f8f8; white-space: pre-wrap;">' . $responseBody . '</pre>';
+        echo '</body></html>';
         exit;
     }
 

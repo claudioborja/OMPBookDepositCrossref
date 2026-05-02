@@ -11,8 +11,8 @@
 <version>
     <application>OMPBookDepositCrossref</application>
     <type>plugins.importexport</type>
-    <release>1.0.0.0</release>
-    <date>2026-04-04</date>
+    <release>1.1.0.0</release>
+    <date>2026-05-02</date>
     <lazy-load>0</lazy-load>
     <!-- En OMP 3.4 la clase se declara explícitamente -->
     <class>APP\plugins\importexport\OMPBookDepositCrossref\OMPBookDepositCrossrefPlugin</class>

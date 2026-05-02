@@ -46,9 +46,35 @@
 						</template>
 					</submissions-list-panel>
 					<br><br>
+					{fbvFormSection title="plugins.importexport.OMPBookDepositCrossref.depositConfigTitle"}
+						<p class="pkp_help">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositNotice"}
+						</p>
+						<label for="crossrefEnvironment" style="display:block; margin-bottom: 8px;">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironment"}
+						</label>
+						<select id="crossrefEnvironment" name="crossrefEnvironment" class="selectMenu" style="margin-bottom: 12px; min-width: 220px;">
+							<option value="test">{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentTest"}</option>
+							<option value="live">{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentLive"}</option>
+						</select>
+
+						<label for="crossrefLoginId" style="display:block; margin-bottom: 8px;">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginId"}
+						</label>
+						<input id="crossrefLoginId" type="text" name="crossrefLoginId" style="margin-bottom: 12px; min-width: 320px;" />
+
+						<label for="crossrefLoginPasswd" style="display:block; margin-bottom: 8px;">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginPasswd"}
+						</label>
+						<input id="crossrefLoginPasswd" type="password" name="crossrefLoginPasswd" style="margin-bottom: 12px; min-width: 320px;" />
+					{/fbvFormSection}
+
 					{fbvFormSection}
 						<button class="pkp_button" type="submit">
 							{translate key="plugins.importexport.OMPBookDepositCrossref.exportButton"}
+						</button>
+						<button class="pkp_button" type="submit" formaction="{plugin_url path="depositSubmissionsBounce"}" style="margin-left: 8px;">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositButton"}
 						</button>
 					{/fbvFormSection}
 				{/fbvFormArea}

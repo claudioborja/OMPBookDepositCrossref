@@ -20,3 +20,72 @@ msgstr "Export XML"
 
 msgid "plugins.importexport.OMPBookDepositCrossref.exportButton"
 msgstr "Export Crossref XML"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositConfigTitle"
+msgstr "Crossref direct deposit"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositNotice"
+msgstr "Use your Crossref credentials to deposit the selected records directly. Test mode is recommended first."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositEnvironment"
+msgstr "Environment"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositEnvironmentTest"
+msgstr "Test"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositEnvironmentLive"
+msgstr "Production"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositLoginId"
+msgstr "Crossref login ID"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositLoginPasswd"
+msgstr "Crossref password"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositButton"
+msgstr "Deposit to Crossref"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositMissingCredentials"
+msgstr "Crossref credentials are required."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositCurlUnavailable"
+msgstr "cURL is not available in this PHP environment."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositTempFileError"
+msgstr "Unable to create temporary XML file for deposit."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositConnectionError"
+msgstr "Could not connect to Crossref endpoint."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositSuccess"
+msgstr "Deposit sent successfully. Check Crossref response details below."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositHttpError"
+msgstr "Crossref returned an HTTP error during deposit."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositStatusOk"
+msgstr "Success"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositStatusError"
+msgstr "Error"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositResultTitle"
+msgstr "Crossref Deposit Result"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositResultStatus"
+msgstr "Status"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositResultMessage"
+msgstr "Message"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositResultEnvironment"
+msgstr "Environment"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositResultEndpoint"
+msgstr "Endpoint"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositResultHttpStatus"
+msgstr "HTTP status"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositResultResponse"
+msgstr "Raw response"
