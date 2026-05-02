@@ -91,28 +91,18 @@
 						</template>
 					</submissions-list-panel>
 					<br><br>
-					{fbvFormSection title="plugins.importexport.OMPBookDepositCrossref.depositConfigTitle"}
-						<label for="crossrefEnvironment" style="display:block; margin-bottom: 8px;">
-							{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironment"}
-						</label>
-						<select id="crossrefEnvironment" name="crossrefEnvironment" class="selectMenu" style="margin-bottom: 16px; min-width: 220px;">
-							<option value="test"{if $savedEnvironment === 'test'} selected{/if}>{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentTest"}</option>
-							<option value="live"{if $savedEnvironment === 'live'} selected{/if}>{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentLive"}</option>
-						</select>
-
-						<label for="crossrefLoginId" style="display:block; margin-bottom: 8px;">
-							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginId"}
-						</label>
-						<input id="crossrefLoginId" type="text" name="crossrefLoginId" value="{$savedLoginId|escape}" style="margin-bottom: 16px; min-width: 320px;" />
-
-						<label for="crossrefLoginPasswd" style="display:block; margin-bottom: 8px;">
-							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginPasswd"}
-						</label>
-						<input id="crossrefLoginPasswd" type="password" name="crossrefLoginPasswd" placeholder="{if $savedLoginPasswd}{translate key="plugins.importexport.OMPBookDepositCrossref.configPasswordSaved"}{/if}" style="margin-bottom: 16px; min-width: 320px;" />
-					{/fbvFormSection}
-
+					{if $savedLoginId}
+						<p class="pkp_help">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositUsingConfig"
+								environment=$savedEnvironment loginId=$savedLoginId}
+						</p>
+					{else}
+						<p class="pkp_help pkp_form_error">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositNoConfig"}
+						</p>
+					{/if}
 					{fbvFormSection}
-						<button class="pkp_button" type="submit">
+						<button class="pkp_button" type="submit"{if !$savedLoginId} disabled{/if}>
 							{translate key="plugins.importexport.OMPBookDepositCrossref.depositButton"}
 						</button>
 					{/fbvFormSection}

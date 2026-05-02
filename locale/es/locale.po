@@ -69,6 +69,12 @@ msgstr "Contrasena de Crossref"
 msgid "plugins.importexport.OMPBookDepositCrossref.depositButton"
 msgstr "Depositar en Crossref"
 
+msgid "plugins.importexport.OMPBookDepositCrossref.depositUsingConfig"
+msgstr "Se depositara usando las credenciales guardadas: {$loginId} (entorno: {$environment})."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositNoConfig"
+msgstr "No hay credenciales configuradas. Ve primero a la pestana Configuracion."
+
 msgid "plugins.importexport.OMPBookDepositCrossref.depositMissingCredentials"
 msgstr "Las credenciales de Crossref son obligatorias."
 

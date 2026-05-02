@@ -366,21 +366,9 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
      */
     protected function depositSubmissions($submissionIds, $context, $request)
     {
-        $environment = trim((string) $request->getUserVar('crossrefEnvironment'));
-        if ($environment !== 'live') {
-            $environment = 'test';
-        }
-
-        $loginId     = trim((string) $request->getUserVar('crossrefLoginId'));
-        $loginPasswd = trim((string) $request->getUserVar('crossrefLoginPasswd'));
-
-        // Fall back to saved settings when the form fields arrive empty.
-        if ($loginId === '') {
-            $loginId = (string) $this->getSetting($context->getId(), 'crossrefLoginId');
-        }
-        if ($loginPasswd === '') {
-            $loginPasswd = (string) $this->getSetting($context->getId(), 'crossrefLoginPasswd');
-        }
+        $environment = (string) $this->getSetting($context->getId(), 'crossrefEnvironment') ?: 'test';
+        $loginId     = trim((string) $this->getSetting($context->getId(), 'crossrefLoginId'));
+        $loginPasswd = trim((string) $this->getSetting($context->getId(), 'crossrefLoginPasswd'));
 
         if ($loginId === '' || $loginPasswd === '') {
             $this->renderDepositResult([

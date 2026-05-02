@@ -69,6 +69,12 @@ msgstr "Crossref password"
 msgid "plugins.importexport.OMPBookDepositCrossref.depositButton"
 msgstr "Deposit to Crossref"
 
+msgid "plugins.importexport.OMPBookDepositCrossref.depositUsingConfig"
+msgstr "Will deposit using saved credentials: {$loginId} ({$environment} environment)."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.depositNoConfig"
+msgstr "No credentials configured. Go to the Configuration tab first."
+
 msgid "plugins.importexport.OMPBookDepositCrossref.depositMissingCredentials"
 msgstr "Crossref credentials are required."
 
