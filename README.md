@@ -8,6 +8,22 @@ Desarrollado por **Claudio Borja** en **[SOFTECAPPS S.A.S.](https://softecsa.com
 
 Contacto: claudio-borja@hotmail.com, info@softecsa.com
 
+> Plugin orientado a una exportación simple y validable de metadatos OMP hacia Crossref.
+
+## Navegación rápida
+
+- [Características](#características)
+- [Esquemas de referencia](#esquemas-de-referencia)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Flujo de exportación](#flujo-de-exportación)
+- [Requisitos](#requisitos)
+- [Compatibilidad verificada](#compatibilidad-verificada)
+- [Estructura del plugin](#estructura-del-plugin)
+- [Limitaciones conocidas](#limitaciones-conocidas)
+- [Uso de IA en el desarrollo](#uso-de-ia-en-el-desarrollo)
+- [Licencia](#licencia)
+
 ---
 
 ## Características
@@ -55,6 +71,16 @@ El plugin genera XML en **Crossref 5.4.0**, pero toma como guía práctica estos
 4. Hacer clic en **Exportar XML**.
 5. Se descargará el archivo `crossref_books_<timestamp>.xml` listo para subir al [Crossref Admin](https://doi.crossref.org/).
 
+## Flujo de exportación
+
+```mermaid
+flowchart LR
+   A[Libro publicado en OMP] --> B[Seleccion en el plugin]
+   B --> C[Generacion de XML Crossref 5.4.0]
+   C --> D[Revision tecnica]
+   D --> E[Deposito en Crossref Admin]
+```
+
 ---
 
 ## Requisitos
@@ -69,8 +95,8 @@ El plugin genera XML en **Crossref 5.4.0**, pero toma como guía práctica estos
 
 | OMP | Estado |
 |---|---|
-| 3.4.0.8 | ✅ Probado |
-| 3.5.0.4 | ✅ Probado |
+| 3.4.0.8 | Probado |
+| 3.5.0.4 | Probado |
 
 ---
 
@@ -93,6 +119,14 @@ OMPBookDepositCrossref/
 - `edition_number` y DOI de la serie no se exportan automáticamente (OMP no almacena estos campos en el modelo de publicación/serie). Se pueden agregar manualmente en el webform de Crossref.
 - Si la serie del libro no tiene ISSN configurado en OMP, el plugin usa `book_metadata` en lugar de `book_series_metadata`.
 - La referencia `book_series5.3.0.xml` se usa como guía estructural para series, pero la salida final del plugin se deposita en formato Crossref 5.4.0.
+
+---
+
+## Uso de IA en el desarrollo
+
+Este proyecto declara el uso de agentes de IA como soporte durante el desarrollo (por ejemplo, para asistencia en redacción, revisión de código y propuestas de refactorización).
+
+Las decisiones de arquitectura, implementación final y validación funcional fueron revisadas y aprobadas por el responsable del proyecto.
 
 ---
 

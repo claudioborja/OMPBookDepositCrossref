@@ -8,6 +8,22 @@ Developed by **Claudio Borja** at **[SOFTECAPPS S.A.S.](https://softecsa.com)**.
 
 Contact: claudio-borja@hotmail.com, info@softecsa.com
 
+> Plugin designed for simple, auditable OMP metadata export to Crossref.
+
+## Quick Navigation
+
+- [Features](#features)
+- [Reference Schemas](#reference-schemas)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Export Flow](#export-flow)
+- [Requirements](#requirements)
+- [Verified Compatibility](#verified-compatibility)
+- [Plugin Structure](#plugin-structure)
+- [Known Limitations](#known-limitations)
+- [AI Usage in Development](#ai-usage-in-development)
+- [License](#license)
+
 ---
 
 ## Features
@@ -55,6 +71,16 @@ The plugin generates **Crossref 5.4.0** XML, using these official examples as pr
 4. Click **Export XML**.
 5. The plugin will download a file named `crossref_books_<timestamp>.xml`, ready to upload to [Crossref Admin](https://doi.crossref.org/).
 
+## Export Flow
+
+```mermaid
+flowchart LR
+    A[Published book in OMP] --> B[Selection in the plugin]
+    B --> C[Crossref 5.4.0 XML generation]
+    C --> D[Technical review]
+    D --> E[Deposit in Crossref Admin]
+```
+
 ---
 
 ## Requirements
@@ -96,6 +122,14 @@ OMPBookDepositCrossref/
 - `edition_number` and series DOI are not exported automatically because OMP does not store these fields in the publication/series data model. They can be added manually in the Crossref web form if needed.
 - If a book series in OMP has no ISSN configured, the plugin falls back to `book_metadata` instead of `book_series_metadata`.
 - The `book_series5.3.0.xml` reference is used as structural guidance for series handling, but the final output is deposited in Crossref 5.4.0 format.
+
+---
+
+## AI Usage in Development
+
+This project declares the use of AI agents as development support (for example, for writing assistance, code review, and refactoring suggestions).
+
+Architecture decisions, final implementation, and functional validation were reviewed and approved by the maintainer of the project.
 
 ---
 
