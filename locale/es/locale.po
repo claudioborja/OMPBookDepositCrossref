@@ -1,0 +1,22 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OMPBookDepositCrossref\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.displayName"
+msgstr "OMP Book Deposit Crossref"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.description"
+msgstr "Genera XML en esquema Crossref 5.4.0 para registrar DOIs de libros y capítulos desde OMP."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.schemaNotice"
+msgstr "La exportación sigue el esquema Crossref 5.4.0 y toma como referencia los ejemplos oficiales book5.4.0.xml y book_series5.3.0.xml para libros y series."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.exportTab"
+msgstr "Exportar XML"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.exportButton"
+msgstr "Exportar XML Crossref"
