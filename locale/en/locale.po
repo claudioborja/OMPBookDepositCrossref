@@ -24,6 +24,27 @@ msgstr "Export Crossref XML"
 msgid "plugins.importexport.OMPBookDepositCrossref.depositTab"
 msgstr "Deposit to Crossref"
 
+msgid "plugins.importexport.OMPBookDepositCrossref.configTab"
+msgstr "Configuration"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.configNotice"
+msgstr "Save your Crossref credentials here. They will be pre-filled automatically in the Deposit tab."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.configSaveButton"
+msgstr "Save settings"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.configSaved"
+msgstr "Settings saved successfully."
+
+msgid "plugins.importexport.OMPBookDepositCrossref.configPasswordSaved"
+msgstr "Password saved — leave blank to keep it"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.configPasswordEmpty"
+msgstr "Enter password"
+
+msgid "plugins.importexport.OMPBookDepositCrossref.configPasswordHint"
+msgstr "Leave the password field empty to keep the currently saved value."
+
 msgid "plugins.importexport.OMPBookDepositCrossref.depositConfigTitle"
 msgstr "Crossref direct deposit"
 

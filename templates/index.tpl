@@ -15,6 +15,7 @@
 		<ul>
 			<li><a href="#exportSubmissions-tab">{translate key="plugins.importexport.OMPBookDepositCrossref.exportTab"}</a></li>
 			<li><a href="#depositSubmissions-tab">{translate key="plugins.importexport.OMPBookDepositCrossref.depositTab"}</a></li>
+			<li><a href="#config-tab">{translate key="plugins.importexport.OMPBookDepositCrossref.configTab"}</a></li>
 		</ul>
 
 		{{-- Tab 1: Exportar XML --}}
@@ -95,24 +96,69 @@
 							{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironment"}
 						</label>
 						<select id="crossrefEnvironment" name="crossrefEnvironment" class="selectMenu" style="margin-bottom: 16px; min-width: 220px;">
-							<option value="test">{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentTest"}</option>
-							<option value="live">{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentLive"}</option>
+							<option value="test"{if $savedEnvironment === 'test'} selected{/if}>{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentTest"}</option>
+							<option value="live"{if $savedEnvironment === 'live'} selected{/if}>{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentLive"}</option>
 						</select>
 
 						<label for="crossrefLoginId" style="display:block; margin-bottom: 8px;">
 							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginId"}
 						</label>
-						<input id="crossrefLoginId" type="text" name="crossrefLoginId" style="margin-bottom: 16px; min-width: 320px;" />
+						<input id="crossrefLoginId" type="text" name="crossrefLoginId" value="{$savedLoginId|escape}" style="margin-bottom: 16px; min-width: 320px;" />
 
 						<label for="crossrefLoginPasswd" style="display:block; margin-bottom: 8px;">
 							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginPasswd"}
 						</label>
-						<input id="crossrefLoginPasswd" type="password" name="crossrefLoginPasswd" style="margin-bottom: 16px; min-width: 320px;" />
+						<input id="crossrefLoginPasswd" type="password" name="crossrefLoginPasswd" placeholder="{if $savedLoginPasswd}{translate key="plugins.importexport.OMPBookDepositCrossref.configPasswordSaved"}{/if}" style="margin-bottom: 16px; min-width: 320px;" />
 					{/fbvFormSection}
 
 					{fbvFormSection}
 						<button class="pkp_button" type="submit">
 							{translate key="plugins.importexport.OMPBookDepositCrossref.depositButton"}
+						</button>
+					{/fbvFormSection}
+				{/fbvFormArea}
+			</form>
+		</div>
+
+		{{-- Tab 3: Configuración --}}
+		<div id="config-tab">
+			{if $settingsSaved}
+				<div class="pkp_controllers_notification" style="margin-bottom: 16px;">
+					{translate key="plugins.importexport.OMPBookDepositCrossref.configSaved"}
+				</div>
+			{/if}
+			<form id="configForm" class="pkp_form" action="{plugin_url path="saveSettingsBounce"}" method="post">
+				{csrf}
+				{fbvFormArea id="configFormArea"}
+					<p class="pkp_help">
+						{translate key="plugins.importexport.OMPBookDepositCrossref.configNotice"}
+					</p>
+					{fbvFormSection title="plugins.importexport.OMPBookDepositCrossref.depositConfigTitle"}
+						<label for="configEnvironment" style="display:block; margin-bottom: 8px;">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironment"}
+						</label>
+						<select id="configEnvironment" name="crossrefEnvironment" class="selectMenu" style="margin-bottom: 16px; min-width: 220px;">
+							<option value="test"{if $savedEnvironment === 'test'} selected{/if}>{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentTest"}</option>
+							<option value="live"{if $savedEnvironment === 'live'} selected{/if}>{translate key="plugins.importexport.OMPBookDepositCrossref.depositEnvironmentLive"}</option>
+						</select>
+
+						<label for="configLoginId" style="display:block; margin-bottom: 8px;">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginId"}
+						</label>
+						<input id="configLoginId" type="text" name="crossrefLoginId" value="{$savedLoginId|escape}" style="margin-bottom: 16px; min-width: 320px;" />
+
+						<label for="configLoginPasswd" style="display:block; margin-bottom: 8px;">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.depositLoginPasswd"}
+						</label>
+						<input id="configLoginPasswd" type="password" name="crossrefLoginPasswd" placeholder="{if $savedLoginPasswd}{translate key="plugins.importexport.OMPBookDepositCrossref.configPasswordSaved"}{else}{translate key="plugins.importexport.OMPBookDepositCrossref.configPasswordEmpty"}{/if}" style="margin-bottom: 16px; min-width: 320px;" />
+						<p class="pkp_help">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.configPasswordHint"}
+						</p>
+					{/fbvFormSection}
+
+					{fbvFormSection}
+						<button class="pkp_button" type="submit">
+							{translate key="plugins.importexport.OMPBookDepositCrossref.configSaveButton"}
 						</button>
 					{/fbvFormSection}
 				{/fbvFormArea}

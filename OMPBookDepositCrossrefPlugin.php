@@ -78,6 +78,10 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
                 ]);
                 $templateMgr->assign([
                     'pageComponent' => 'ImportExportPage',
+                    'savedEnvironment' => $this->getSetting($context->getId(), 'crossrefEnvironment') ?: 'test',
+                    'savedLoginId'     => $this->getSetting($context->getId(), 'crossrefLoginId') ?: '',
+                    'savedLoginPasswd' => $this->getSetting($context->getId(), 'crossrefLoginPasswd') ?: '',
+                    'settingsSaved'    => (bool) $request->getUserVar('settingsSaved'),
                 ]);
                 $templateMgr->display($this->getTemplateResource('index.tpl'));
                 break;
@@ -100,7 +104,12 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
 
                 $this->depositSubmissions($selectedSubmissions, $context, $request);
                 break;
-                
+
+            case 'saveSettingsBounce':
+                $this->saveSettings($context, $request);
+                $request->redirect(null, null, null, ['plugin', $this->getName()], ['settingsSaved' => 1]);
+                break;
+
             default:
                 $dispatcher = $request->getDispatcher();
                 $dispatcher->handle404();
@@ -335,6 +344,24 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
     }
 
     /**
+     * Persist Crossref credentials and environment in plugin settings.
+     */
+    protected function saveSettings($context, $request)
+    {
+        $environment = $request->getUserVar('crossrefEnvironment') === 'live' ? 'live' : 'test';
+        $loginId     = trim((string) $request->getUserVar('crossrefLoginId'));
+        $loginPasswd = trim((string) $request->getUserVar('crossrefLoginPasswd'));
+
+        $this->updateSetting($context->getId(), 'crossrefEnvironment', $environment, 'string');
+        $this->updateSetting($context->getId(), 'crossrefLoginId', $loginId, 'string');
+
+        // Only overwrite stored password when user actively sends a new non-empty value.
+        if ($loginPasswd !== '') {
+            $this->updateSetting($context->getId(), 'crossrefLoginPasswd', $loginPasswd, 'string');
+        }
+    }
+
+    /**
      * Deposit selected submissions directly to Crossref.
      */
     protected function depositSubmissions($submissionIds, $context, $request)
@@ -344,8 +371,16 @@ class OMPBookDepositCrossrefPlugin extends ImportExportPlugin
             $environment = 'test';
         }
 
-        $loginId = trim((string) $request->getUserVar('crossrefLoginId'));
+        $loginId     = trim((string) $request->getUserVar('crossrefLoginId'));
         $loginPasswd = trim((string) $request->getUserVar('crossrefLoginPasswd'));
+
+        // Fall back to saved settings when the form fields arrive empty.
+        if ($loginId === '') {
+            $loginId = (string) $this->getSetting($context->getId(), 'crossrefLoginId');
+        }
+        if ($loginPasswd === '') {
+            $loginPasswd = (string) $this->getSetting($context->getId(), 'crossrefLoginPasswd');
+        }
 
         if ($loginId === '' || $loginPasswd === '') {
             $this->renderDepositResult([
